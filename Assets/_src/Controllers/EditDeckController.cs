@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using PoliticalSimulatorCore.Model;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,14 +20,19 @@ public class EditDeckController : MonoBehaviour {
 
     private void setupOwnedCards()
     {
+        List<Card> cards = MainController.CurrentUserProfile.CollectedCards;
+
         GameObject tmp = GameObject.Find("OwnedScrollContent");
         int lastY = 0;
 
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < cards.Count; i++)
         {
             GameObject card = Instantiate(template, tmp.transform);
             card.transform.localPosition = new Vector3(0, (-30 + lastY));
             lastY = (int)card.transform.localPosition.y;
+
+            card.GetComponent<EditDeckElement>().CardThatWeRepresent = cards[i];
+            card.GetComponentInChildren<Text>().text = cards[i].Name;
         }
 
         if(lastY < -260)
