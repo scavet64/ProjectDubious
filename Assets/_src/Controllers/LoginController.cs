@@ -122,6 +122,18 @@ public class LoginController : MonoBehaviour
     private static void createProfile(String name)
     {
         UserProfile newUser = new UserProfile(name);
+
+        if (name.Equals("master"))
+        {
+            foreach(Card card in AllCards.getInstance().GetAllCards())
+            {
+                //add two copies
+                newUser.CollectedCards.Add(card);
+                newUser.CollectedCards.Add(card);
+            }
+            
+        }
+
         MainController.CurrentUserProfile = newUser;
         saveProfile(newUser);
     }
