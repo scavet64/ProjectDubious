@@ -94,16 +94,16 @@ namespace PoliticalSimulatorCore.Model
         /// </summary>
         /// <returns>The card.</returns>
         /// <param name="card">Card.</param>
-        public String removeCard(Card card)
+        public bool removeCard(Card card)
         {
             if (CardList.Contains(card))
             {
                 CardList.Remove(card);
-                return card.Name + " was removed from the deck.";
+                return true;
             }
             else
             {
-                return card.Name + " is not in the deck.";
+                return false;
             }
         }
 

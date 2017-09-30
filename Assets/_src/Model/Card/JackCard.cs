@@ -12,7 +12,7 @@ namespace PoliticalSimulatorCore.Model
         private const long serialVersionUID = 1L;
         private int pieceNumber;
 
-        private static RareCreature jackMyers = new RareCreature("Jack Myers", 6, 100, 20, 20, Type.FORBIDDEN, "CardImages//jackMyers.png", "FieldImages//jackMyersField.png");
+        private static RareCreature jackMyers = new RareCreature("Jack Myers", 6, 100, 20, 20, Type.FORBIDDEN, "CardImages//jackMyers", "FieldImages//jackMyersField");
 
         public static RareCreature JackMyers
         {

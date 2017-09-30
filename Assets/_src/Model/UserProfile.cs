@@ -104,7 +104,7 @@ namespace PoliticalSimulatorCore.Model
             collectedCards = new List<Card>();
             packs = new List<Pack>();
             credits = 100;
-            playerImagePath = "images//defaultPlayer.png";
+            playerImagePath = "images//defaultPlayer";
             IsFirstLoad = true;
         }
 

@@ -6,40 +6,106 @@ using UnityEngine.UI;
 
 public class EditDeckController : MonoBehaviour {
 
+    public static EditDeckController Instance { get; set; }
+
     public GameObject template;
+    public Card CurrentSelectedCard { get; set; }
 
-	// Use this for initialization
-	void Start () {
-        setupOwnedCards();
+    public GameObject SelectedCardPanel;
+    private Image selectedCardPanelImage;
+
+    private const string OWNEDCARDSPANEL = "OwnedScrollContent";
+    private const string INDECKPANEL = "InDeckContent";
+
+
+    // Use this for initialization
+    void Start () {
+        selectedCardPanelImage = SelectedCardPanel.GetComponent<Image>();
+        SetupOwnedCards();
+        SetupCardsInDeck();
+        Instance = this;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-    private void setupOwnedCards()
+    public void AddCardToDeck()
+    {
+        if (MainController.CurrentUserProfile.CurrentDeck.addCard(CurrentSelectedCard))
+        {
+            AddCardToGuiList(CurrentSelectedCard, GameObject.Find(INDECKPANEL));
+
+            //remove from available card list maybe
+            GameObject tmp = FindGameObjectFromList(GameObject.Find(OWNEDCARDSPANEL), CurrentSelectedCard);
+            Destroy(tmp);
+        }
+        else
+        {
+            //Display error
+        }
+        
+    }
+
+    public void RemoveCardFromDeck()
+    {
+        if (MainController.CurrentUserProfile.CurrentDeck.removeCard(CurrentSelectedCard))
+        {
+            //remove from deck gui and add back to available cards
+            GameObject tmp = FindGameObjectFromList(GameObject.Find(INDECKPANEL), CurrentSelectedCard);
+            Destroy(tmp);
+        }
+        else
+        {
+            //display error
+        }
+    }
+
+    public void CardWasSelected(Card card)
+    {
+        CurrentSelectedCard = card;
+        Sprite sp = Resources.Load(card.ImageFilePath, typeof(Sprite)) as Sprite;
+        Debug.Log(sp);
+        selectedCardPanelImage.sprite = sp;
+    }
+
+    private void SetupOwnedCards()
     {
         List<Card> cards = MainController.CurrentUserProfile.CollectedCards;
+        GameObject tmp = GameObject.Find(OWNEDCARDSPANEL);
 
-        GameObject tmp = GameObject.Find("OwnedScrollContent");
-        int lastY = 0;
-
-        for(int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
-            GameObject card = Instantiate(template, tmp.transform);
-            card.transform.localPosition = new Vector3(0, (-30 + lastY));
-            lastY = (int)card.transform.localPosition.y;
+            AddCardToGuiList(cards[i], tmp);
+        }
+    }
 
-            card.GetComponent<EditDeckElement>().CardThatWeRepresent = cards[i];
-            card.GetComponentInChildren<Text>().text = cards[i].Name;
+    private void SetupCardsInDeck()
+    {
+        List<Card> cards = MainController.CurrentUserProfile.CurrentDeck.CardList;
+        GameObject tmp = GameObject.Find(INDECKPANEL);
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            AddCardToGuiList(cards[i], tmp);
+        }
+    }
+
+    private void AddCardToGuiList(Card card, GameObject parentElement)
+    {
+        GameObject cardGO = Instantiate(template, parentElement.transform);
+
+        cardGO.GetComponent<EditDeckElement>().CardThatWeRepresent = card;
+        cardGO.GetComponentInChildren<Text>().text = card.Name;
+    }
+
+    private GameObject FindGameObjectFromList(GameObject listToCheck, Card cardToFind)
+    {
+        foreach (Transform childTrans in listToCheck.transform)
+        {
+            EditDeckElement ede = childTrans.GetComponent<EditDeckElement>();
+            if (ede.CardThatWeRepresent.Equals(cardToFind))
+            {
+                return childTrans.gameObject;
+            }
         }
 
-        if(lastY < -260)
-        {
-            RectTransform rt = tmp.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(rt.sizeDelta.x, (lastY * -1) + 30 );
-        }
-
+        return null;
     }
 }

@@ -33,7 +33,7 @@ public class LoginController : MonoBehaviour
             InputField inputFieldCo = inputFieldGo.GetComponent<InputField>();
             if(inputFieldCo != null)
             {
-                loadProfile(inputFieldCo.text);
+                MainController.CurrentUserProfile = loadProfile(inputFieldCo.text);
                 SceneController.Instance.LoadLevel("Menu");
             }
         }

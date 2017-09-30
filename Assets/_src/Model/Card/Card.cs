@@ -63,7 +63,7 @@ namespace PoliticalSimulatorCore.Model
             this.ImageFilePath = imgFilePath;
 
             //TODO Have a way for this to be a user choice
-            this.CardBackImgPath = "..\\Images\\Card..\\Images\\CardBack.png";
+            this.CardBackImgPath = "Images\\CardImages\\CardBack";
         }
 
         /// <summary>
